@@ -10,12 +10,13 @@ Arma 3 has a built-in FreeTrack head-tracking client. Strings in `arma3_x64.exe`
   `MovementTracker` subclasses, so FreeTrack data gets the full head treatment: yaw,
   pitch and roll in the cockpit, composed with mouse freelook by the engine.
 
-So the mod does not need opentrack or any other program. It ships two tiny DLLs:
+So the mod does not need opentrack or any other program. It ships two tiny DLLs, built
+into the repo root, which is the mod root:
 
 | File | Loaded by | Job |
 |------|-----------|-----|
-| `bin/FreeTrackClient64.dll` | the engine, at start-up, from the registry folder | answers `FTGetData` with whatever pose was last pushed in |
-| `bin/hhl_x64.dll` | `callExtension "hhl"`, from the Arma root or a mod folder | receives the pose from SQF each frame and pushes it into the tracker DLL (found in-process with `GetModuleHandle`) |
+| `FreeTrackClient64.dll` | the engine, at start-up, from the registry folder | answers `FTGetData` with whatever pose was last pushed in |
+| `hhl_x64.dll` | `callExtension "hhl"`, from the Arma root or a mod folder | receives the pose from SQF each frame and pushes it into the tracker DLL (found in-process with `GetModuleHandle`); registers the tracker |
 
 No shared memory, no sockets, no threads. `FTGetData` bumps `DataID` on every poll so the
 engine never sees the data as stale.
@@ -23,10 +24,12 @@ engine never sees the data as stale.
 ## Extension API
 
 ```sqf
-"hhl" callExtension "version"                     // "hhl 0.1.0"
+"hhl" callExtension "version"                     // "hhl 1.0.0"
 "hhl" callExtension "status"                      // "tracker=ok polls=1234" | "tracker=notloaded" | "tracker=foreign"
 "hhl" callExtension "zero"                        // recentre the head
 "hhl" callExtension ["pose", [yaw, pitch, roll]]  // integer millidegrees; FreeTrack signs: yaw + = left, pitch + = up, roll + = left
+"hhl" callExtension "install"                     // "ok" | "foreign:<path>" | "error"
+"hhl" callExtension "uninstall"                   // "ok" | "foreign:<path>"
 ```
 
 `polls` must keep rising while Arma runs; that is the proof the engine loaded our tracker
@@ -34,27 +37,35 @@ DLL. `tracker=notloaded` means the registry value is missing or Arma was not res
 after it was set. `tracker=foreign` means another FreeTrackClient64.dll (opentrack's, for
 instance) is loaded instead of ours.
 
+`install` writes `HKCU\Software\Freetrack\FreetrackClient\Path` = the folder hhl_x64.dll
+was loaded from (`GetModuleFileNameW`) and remembers that folder in
+`HKCU\Software\HelicopterHorizonLock\RegisteredPath`. If `Path` already exists and is not
+the remembered one it belongs to someone else's tracker: nothing is written and the reply
+is `foreign:<that path>`. `uninstall` deletes both values, but only while `Path` still
+equals the remembered one. The engine reads `Path` at start-up, so both need a restart to
+take effect.
+
 ## Build
 
 `native/build.cmd`. Uses only the MSVC 14.29 toolset already on this PC; no Windows SDK
 is installed, so the sources include no headers, link no C runtime (`/NODEFAULTLIB`,
-entry point `DllMain`), and the two kernel32 imports come from an import library that
-`lib.exe` generates from `kernel32.def`. Output goes to `bin/`. Arma holds both DLLs
-while it runs, so close the game before rebuilding.
+entry point `DllMain`), and the kernel32 and advapi32 imports come from import libraries
+that `lib.exe` generates from `kernel32.def` and `advapi32.def`. Intermediates go to
+`native/out/`, the DLLs to the repo root. Arma holds both DLLs while it runs, so close the
+game before rebuilding.
 
-## One-time setup on a PC
+## Registering the tracker by hand
 
-1. Copy `bin/hhl_x64.dll` into the Arma 3 root (or later, the mod folder).
-2. Point the engine at the tracker DLL (user hive, no admin rights):
+The addon does this itself on first run (setting "Register the head tracker
+automatically"). To do it without the addon:
 
-   ```
-   reg add "HKCU\Software\Freetrack\FreetrackClient" /v Path /t REG_SZ /d "<full path of bin>" /f
-   ```
+```
+reg add "HKCU\Software\Freetrack\FreetrackClient" /v Path /t REG_SZ /d "<folder holding FreeTrackClient64.dll>" /f
+```
 
-3. Restart Arma. Then `"hhl" callExtension "status"` in the debug console must say
-   `tracker=ok polls=N` with N rising.
-
-To undo: `reg delete "HKCU\Software\Freetrack\FreetrackClient" /f` and delete the DLL.
+Restart Arma. Then `"hhl" callExtension "status"` in the debug console must say
+`tracker=ok polls=N` with N rising. To undo: `"hhl" callExtension "uninstall"`, or
+`reg delete "HKCU\Software\Freetrack\FreetrackClient" /f`.
 
 ## BattlEye blocks unknown DLLs
 
@@ -84,7 +95,7 @@ Configure, Controls, Controllers (FreeTrack, TrackIR and Tobii share that one en
   `360 * r` degrees of head pitch and `180 * r` degrees of head roll (fits: 6.25 and
   3.18 engine degrees per degree sent, i.e. 2π and π). It treats the value as a
   normalised angle, the same way it normalises TrackIR's ±16383 units. The harness
-  divides by `HZC_gainPitch` / `HZC_gainRoll` before sending; the addon will do the same.
+  divides by `HZC_gainPitch` / `HZC_gainRoll` before sending; the addon does the same.
 - The vehicle's default head angle stays in: the rendered view sits about 6 degrees
   nose-down on the Huron with zero sent.
 

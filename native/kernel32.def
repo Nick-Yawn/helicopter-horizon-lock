@@ -2,3 +2,4 @@ LIBRARY kernel32.dll
 EXPORTS
 GetModuleHandleW
 GetProcAddress
+GetModuleFileNameW

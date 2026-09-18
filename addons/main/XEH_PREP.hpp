@@ -1,0 +1,2 @@
+PREP(onFrame);
+PREP(selfCheck);

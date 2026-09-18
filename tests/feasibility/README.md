@@ -182,11 +182,11 @@ runs. Details in `native/README.md`.
 
 **One-time setup** (a restart of Arma is needed after step 2):
 
-1. `bin\hhl_x64.dll` must sit in the Arma 3 root folder (done from this PC).
+1. `hhl_x64.dll` (repo root) must sit in the Arma 3 root folder (done from this PC).
 2. Tell the engine where the tracker DLL is (user registry, no admin):
 
    ```
-   reg add "HKCU\Software\Freetrack\FreetrackClient" /v Path /t REG_SZ /d "C:\Users\Nicho\projects\arma3-horizoncam\bin" /f
+   reg add "HKCU\Software\Freetrack\FreetrackClient" /v Path /t REG_SZ /d "C:\Users\Nicho\projects\arma3-horizoncam" /f
    ```
 
 3. Start Arma, load the mission, run the harness. Before anything else, in the console:

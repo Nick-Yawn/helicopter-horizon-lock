@@ -1,0 +1,14 @@
+name = "Helicopter Horizon Lock"
+prefix = "hhl"
+author = "Nicholas Yuan"
+mainprefix = "z"
+
+[version]
+git_hash = 0
+
+[files]
+# copied to the mod root; callExtension looks for the DLLs next to mod.cpp
+include = ["mod.cpp", "meta.cpp", "LICENSE", "README.md", "hhl_x64.dll", "FreeTrackClient64.dll"]
+
+[hemtt.launch.default]
+workshop = ["450814997"] # CBA_A3

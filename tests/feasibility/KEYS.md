@@ -79,7 +79,7 @@ call HZC_fnc_shutdown;
 ## One-time setup reminders
 
 - Launch **without BattlEye** (it blocks the DLLs).
-- `hhl_x64.dll` in the Arma 3 root; `FreeTrackClient64.dll` in the project `bin` folder,
+- `hhl_x64.dll` in the Arma 3 root; `FreeTrackClient64.dll` in the project root folder,
   which the registry value `HKCU\Software\Freetrack\FreetrackClient\Path` names.
 - Head tracking enabled in Configure, Controls, Controllers (the TrackIR entry).
 - The harness file must be copied into each mission's folder.
