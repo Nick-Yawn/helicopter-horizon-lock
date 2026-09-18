@@ -1,0 +1,16 @@
+# HEMTT build output
+.hemttout/
+releases/
+# Arma / editor junk
+*.pbo
+*.bisign
+*.log
+*.rpt
+# OS / editor
+Thumbs.db
+.DS_Store
+.vscode/
+# Native build artefacts (the DLLs themselves stay committed)
+bin/*.exp
+bin/*.lib
+native/out/
