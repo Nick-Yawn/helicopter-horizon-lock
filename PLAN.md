@@ -8,7 +8,7 @@ the end. The history is in `tests/feasibility/RESULTS.md` (in-game evidence) and
 
 An Arma 3 client-side addon that keeps the helicopter pilot's first-person view level with
 the horizon by acting as the engine's FreeTrack head tracker. Per axis
-`head = -(a - clamp(a, -L, +L))`, yaw untouched. Two mod-shipped DLLs, no external program.
+`head = -clamp(a, -L, +L)`, yaw untouched. Two mod-shipped DLLs, no external program.
 Settled in flight: no knee by default (crossing the knee causes nausea), full strength,
 no washout, no smoothing, one button toggles between levelled and vanilla view.
 
@@ -63,7 +63,7 @@ the mod can set itself up from inside the game:
 | `install` | Writes `HKCU\Software\Freetrack\FreetrackClient\Path` = the folder hhl_x64.dll was loaded from (found with `GetModuleFileNameW`), and remembers that path in `HKCU\Software\HelicopterHorizonLock\RegisteredPath`. Refuses if `Path` already exists and is not the remembered one (someone else's tracker, e.g. opentrack): returns `foreign:<path>`. |
 | `uninstall` | Deletes `Path` only if it equals the remembered one. |
 
-That is the only functional change: four advapi32 imports and one kernel32 import. Plus the
+That is the only functional change: six advapi32 imports and one kernel32 import. Plus the
 rename to `hhl` and the version string "hhl 1.0.0"; `FreeTrackClient64.dll` keeps its name
 (the engine looks for it by name) and only its provider string changes.
 
@@ -82,10 +82,10 @@ and a 32-bit build doubles the BattlEye work. Documented as a requirement.
    Pitch and roll cancelled up to the limits, yaw untouched. The 1-frame prediction lead
    stays as a fixed internal (no setting): 6 ms at 168 fps, but 25 ms at 40 fps.
 2. **Zero pose whenever not levelling**: switched off, third person, not in a helicopter
-   seat, mission end. The head recentres and vanilla is exactly vanilla.
+   seat, next mission start. The head recentres and vanilla is exactly vanilla.
 3. **Toggle** between levelled and vanilla, two ways: a CBA keybind (keyboard, in
    Configure Addons) and a custom-action slot (Use Action 1..20) polled per frame, because
-   CBA keybinds cannot see joystick buttons. Toggle state persists for the session.
+   CBA keybinds cannot see joystick buttons. Toggle state persists for the mission.
 4. **Auto-on** when taking a helicopter seat (setting, default on).
 5. **CBA settings**, client-side, category "Helicopter Horizon Lock":
 
@@ -146,7 +146,7 @@ and a 32-bit build doubles the BattlEye work. Documented as a requirement.
 | Item | Action |
 |---|---|
 | `bin/*.exp`, `bin/*.lib`, `native/out/` | Delete, add to `.gitignore` (build artefacts) |
-| `bin/*.dll` | Keep committed: 2.5 KB and 4.6 KB, and the shipped hashes must be reproducible from the repo |
+| The two DLLs | Committed at the repo root, which is the mod root: HEMTT copies included files with their path kept, and `callExtension` looks only in the mod root. 2.5 KB and 6 KB; the shipped hashes must be reproducible from the repo |
 | `tools/joystick/` | Move out of this repo; it is about the pilot's stick, not the mod |
 | `research/` | Keep as `docs/research/` (history; the README stops pointing readers there first) |
 | `tests/feasibility/` | Keep (harness, KEYS.md, RESULTS.md); mark as not part of the mod |

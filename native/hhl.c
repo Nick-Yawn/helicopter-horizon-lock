@@ -91,8 +91,7 @@ static void putUint(char *out, int size, unsigned int v)
 static int parseInt(const char *s)
 {
     int neg = 0, v = 0;
-    while (*s == ' ') s++;
-    if (*s == '-') { neg = 1; s++; } else if (*s == '+') { s++; }
+    if (*s == '-') { neg = 1; s++; }
     while (*s >= '0' && *s <= '9') { v = v * 10 + (*s - '0'); s++; }
     return neg ? -v : v;
 }
@@ -105,12 +104,12 @@ static int weq(const unsigned short *a, const unsigned short *b)
     return *a == *b;
 }
 
-/* Narrow copy for the output buffer: the low byte of each character is enough for a hint. */
+/* Narrow copy for the output buffer: ASCII as is, anything else as '?', so the reply stays valid UTF-8. */
 static void putWide(char *out, int size, const unsigned short *s)
 {
     int i = 0;
     if (size <= 0) return;
-    while (s[i] && i < size - 1) { out[i] = (char)s[i]; i++; }
+    while (s[i] && i < size - 1) { out[i] = (s[i] < 0x80) ? (char)s[i] : '?'; i++; }
     out[i] = 0;
 }
 
@@ -133,7 +132,7 @@ static void status(char *out, int size)
     resolve();
     if (g_trackerState == 1) {
         put(out, size, "tracker=ok polls=");
-        putUint(out + strlen_(out), size - strlen_(out), g_getPolls ? g_getPolls() : 0u);
+        putUint(out + strlen_(out), size - strlen_(out), g_getPolls());
     } else if (g_trackerState == 3) {
         put(out, size, "tracker=foreign");   /* some other FreeTrackClient64.dll is loaded */
     } else {
@@ -141,17 +140,17 @@ static void status(char *out, int size)
     }
 }
 
-/* Reads a REG_SZ value under HKCU into out; returns 0 (and an empty out) if it is absent. */
+/* Reads a string value under HKCU into out; returns 0 (and an empty out) if it is absent. */
 static int regRead(const unsigned short *subkey, const unsigned short *name, unsigned short *out)
 {
     void *key;
-    unsigned long type = 0, size = (PATH_CHARS - 2) * 2;
+    unsigned long size = (PATH_CHARS - 2) * 2;
     long rc;
     out[0] = 0;
     if (RegOpenKeyExW(HKEY_CURRENT_USER, subkey, 0, KEY_QUERY_VALUE, &key) != 0) return 0;
-    rc = RegQueryValueExW(key, name, 0, &type, (unsigned char *)out, &size);
+    rc = RegQueryValueExW(key, name, 0, 0, (unsigned char *)out, &size);
     RegCloseKey(key);
-    if (rc != 0 || type != REG_SZ) { out[0] = 0; return 0; }
+    if (rc != 0) { out[0] = 0; return 0; }
     out[size / 2] = 0; /* the stored string need not carry its terminator */
     return 1;
 }
@@ -237,16 +236,14 @@ __declspec(dllexport) int __stdcall RVExtensionArgs(char *output, int outputSize
 {
     if (streq(function, "pose")) {
         const float k = 3.14159265358979f / 180000.0f; /* millidegrees to radians */
-        int y, p, r, tx = 0, ty = 0, tz = 0;
+        int y, p, r;
         if (argc < 3) { put(output, outputSize, "badargs"); return 1; }
         y = parseInt(argv[0]); p = parseInt(argv[1]); r = parseInt(argv[2]);
-        if (argc >= 6) { tx = parseInt(argv[3]); ty = parseInt(argv[4]); tz = parseInt(argv[5]); }
         if (!resolve()) { put(output, outputSize, "notracker"); return 2; }
-        g_setPose(y * k, p * k, r * k, (float)tx, (float)ty, (float)tz);
+        g_setPose(y * k, p * k, r * k, 0.0f, 0.0f, 0.0f);
         put(output, outputSize, "ok");
         return 0;
     }
-    if (streq(function, "status")) { status(output, outputSize); return 0; }
     put(output, outputSize, "unknown");
     return 3;
 }

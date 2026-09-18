@@ -29,17 +29,16 @@ if (!_level) exitWith {
     };
 };
 
-if (!GVAR(levelling)) then {
-    GVAR(levelling) = true;
-    if (uiNamespace getVariable [QGVAR(checkPolls), false]) then {
-        uiNamespace setVariable [QGVAR(checkPolls), false];
-        // "status" carries the engine's poll count; it must rise while the view is levelled
-        [{
-            if (("hhl" callExtension "status") isEqualTo _this) then {
-                hint "Helicopter Horizon Lock: enable Head tracking under Configure > Controls > Controllers.";
-            };
-        }, "hhl" callExtension "status", 3] call CBA_fnc_waitAndExecute;
-    };
+private _wasLevelling = GVAR(levelling);
+GVAR(levelling) = true;
+if (uiNamespace getVariable [QGVAR(checkPolls), false]) then {
+    uiNamespace setVariable [QGVAR(checkPolls), false];
+    // "status" carries the engine's poll count; it must rise while the view is levelled
+    [{
+        if (("hhl" callExtension "status") isEqualTo _this) then {
+            hint "Helicopter Horizon Lock: enable Head tracking under Configure > Controls > Controllers.";
+        };
+    }, "hhl" callExtension "status", 3] call CBA_fnc_waitAndExecute;
 };
 
 // airframe attitude: pitch nose-up positive, roll right-wing-down positive
@@ -51,15 +50,13 @@ private _right0 = [cos _yaw, -(sin _yaw), 0];
 private _roll = (_u vectorDotProduct _right0) atan2 (_u vectorDotProduct (_right0 vectorCrossProduct _d));
 
 // one frame of prediction, because the pose sent now is rendered next frame: add the
-// last frame's change, unless the previous sample is stale
-private _now = diag_tickTime;
+// last frame's change, unless levelling has just started
 private _pPred = _pitch;
 private _rPred = _roll;
-if (_now - GVAR(lastTick) < 0.5) then {
+if (_wasLevelling) then {
     _pPred = _pitch + WRAP(_pitch - GVAR(prevPitch));
     _rPred = _roll + WRAP(_roll - GVAR(prevRoll));
 };
-GVAR(lastTick) = _now;
 GVAR(prevPitch) = _pitch;
 GVAR(prevRoll) = _roll;
 

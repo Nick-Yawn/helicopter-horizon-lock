@@ -18,7 +18,8 @@ if (_status in ["tracker=notloaded", "tracker=foreign"]) exitWith {
     private _reply = "hhl" callExtension "install";
     if ((_reply select [0, 8]) isEqualTo "foreign:") then {
         hint format ["Helicopter Horizon Lock: another head-tracking client is registered at %1. Leaving it alone.", _reply select [8]];
-    } else {
+    };
+    if (_reply isEqualTo "ok") then {
         hint "Helicopter Horizon Lock: head tracker registered. Restart Arma 3 once.";
     };
 };

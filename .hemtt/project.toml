@@ -6,6 +6,9 @@ mainprefix = "z"
 [version]
 git_hash = 0
 
+[signing]
+authority = "hhl"
+
 [files]
 # copied to the mod root; callExtension looks for the DLLs next to mod.cpp
 include = ["mod.cpp", "meta.cpp", "LICENSE", "README.md", "hhl_x64.dll", "FreeTrackClient64.dll"]

@@ -41,9 +41,9 @@ instance) is loaded instead of ours.
 was loaded from (`GetModuleFileNameW`) and remembers that folder in
 `HKCU\Software\HelicopterHorizonLock\RegisteredPath`. If `Path` already exists and is not
 the remembered one it belongs to someone else's tracker: nothing is written and the reply
-is `foreign:<that path>`. `uninstall` deletes both values, but only while `Path` still
-equals the remembered one. The engine reads `Path` at start-up, so both need a restart to
-take effect.
+is `foreign:<that path>`. `uninstall` deletes both values while `Path` still equals the
+remembered one; if `Path` is already gone it does nothing and answers `ok`. The engine
+reads `Path` at start-up, so both need a restart to take effect.
 
 ## Build
 

@@ -5,7 +5,6 @@ if (!hasInterface) exitWith {};
 GVAR(active) = false;     // session toggle: levelled view wanted
 GVAR(levelling) = false;  // a pose was sent last frame, so a zero pose is due when levelling stops
 GVAR(slotHeld) = false;
-GVAR(lastTick) = 0;
 GVAR(prevPitch) = 0;
 GVAR(prevRoll) = 0;
 
