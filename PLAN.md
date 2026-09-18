@@ -97,7 +97,7 @@ and a 32-bit build doubles the BattlEye work. Documented as a requirement.
    | Enabled | checkbox | on |
    | Start levelled when entering a helicopter | checkbox | on |
    | Pitch limit (deg) | slider 0..90 | 90 (never unlocks) |
-   | Roll limit (deg) | slider 0..90 | 90 |
+   | Roll limit (deg) | slider 0..45 | 45 (the engine caps tracker roll at 45) |
    | View pitch offset (deg) | slider -20..+20 | 0 (keeps the aircraft's default head angle) |
    | Joystick toggle slot | list: none, Use Action 1..20 | none |
    | Register the head tracker automatically | checkbox | on |

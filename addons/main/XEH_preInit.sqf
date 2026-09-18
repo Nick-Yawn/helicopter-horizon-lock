@@ -23,8 +23,8 @@ ADDON = false;
 ] call CBA_fnc_addSetting;
 
 [QGVAR(rollLimit), "SLIDER",
-    ["Roll limit", "Degrees of bank cancelled before the view starts following the aircraft. 90 keeps the horizon level at any bank."],
-    "Helicopter Horizon Lock", [0, 90, 90, 0], 0
+    ["Roll limit", "Degrees of bank cancelled before the view starts following the aircraft. 90 keeps the horizon level at any bank; the engine stops head roll at 45 degrees."],
+    "Helicopter Horizon Lock", [0, 45, 45, 0], 0
 ] call CBA_fnc_addSetting;
 
 [QGVAR(pitchOffset), "SLIDER",

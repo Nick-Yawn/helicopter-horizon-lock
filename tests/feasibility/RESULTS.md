@@ -163,3 +163,4 @@ Launched with `hemtt launch -Q -- -name=Nick_Yawn -showScriptErrors` (CBA_A3 fro
   levelled: with the head yawed off the nose the pitch and roll corrections act on the
   wrong axes for the direction being looked at. Pilot idea: pause levelling while a look
   action is held. To be tried in the next code pass (a few lines), kept only if it flies well.
+- Roll levelling stops at about 45 degrees of bank whatever the slider says (MH-9, limit 90): an engine cap on tracker head roll. Roll slider now stops at 45.
