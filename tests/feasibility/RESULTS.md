@@ -164,3 +164,7 @@ Launched with `hemtt launch -Q -- -name=Nick_Yawn -showScriptErrors` (CBA_A3 fro
   wrong axes for the direction being looked at. Pilot idea: pause levelling while a look
   action is held. To be tried in the next code pass (a few lines), kept only if it flies well.
 - Roll levelling stops at about 45 degrees of bank whatever the slider says (MH-9, limit 90): an engine cap on tracker head roll. Roll slider now stops at 45.
+- Look pause flown: quick-look on the stick and Alt freelook both drop levelling while held and
+  resume on release. Pilot: "good enough for now"; the jump on engaging is acceptable.
+- Pilot: directional levelling (correction rotated into the look direction) would be ideal;
+  later, not v1.

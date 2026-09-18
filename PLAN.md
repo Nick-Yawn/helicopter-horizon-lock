@@ -139,6 +139,10 @@ and a 32-bit build doubles the BattlEye work. Documented as a requirement.
 
 ### Later (tracked, not in v1.0)
 
+- Directional levelling: rotate the pitch and roll correction into the current look
+  direction so looking around while banked stays level (the pilot: "ultimately ideal").
+  Needs a measurement of how the engine composes the tracker pose with look input; the
+  *Cont look actions read the tracker pose back and may be the probe.
 - A rolled aircraft symbol to replace the flat nose marker (needs a way to hide the
   engine's one first).
 - Per-aircraft memory of limits and pitch offset.
