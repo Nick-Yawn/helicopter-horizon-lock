@@ -140,3 +140,26 @@ Conclusions:
   of custom action "Use Action 1" (bindable to a joystick button).
 - Later the same day (pilot report): masking the showHUD "direction" element did not hide the
   V marker in flight. Marker hiding is cut for v1; the marker stays.
+
+## Run 5 (2026-09-18, the addon, dev build at commit 12f434c, Nick_Yawn profile, BattlEye off)
+
+Launched with `hemtt launch -Q -- -name=Nick_Yawn -showScriptErrors` (CBA_A3 from the Workshop).
+
+- First run: self-check found the tracker not loaded, `install` wrote the registry value
+  (`.hemttout\dev`, confirmed in the registry), hint "Restart Arma 3 once". Nothing else.
+- Second run: **levelled on its own** in the pilot seat, first person, no hint. Auto-on and
+  the profile head-tracking flag did the rest.
+- **Freelook composes on top of the tracker pose** (open since run 4). Pilot: "feels weird
+  but it works"; what is weird is not yet pinned down.
+- Toggle between levelled and vanilla view works; pilot: "works really nicely".
+- Still to fly from PLAN.md step 4: seat swap, respawn, mission restart, third person and
+  back, Hummingbird vs Huron default head angle and the pitch offset slider, copilot seat.
+- Third person: no effect, vanilla view (the pose is zeroed outside the cockpit view). Pass.
+- Copilot seat: dropped by the pilot ("copilot doesnt matter"); the copilot turret check is
+  to be removed from fnc_onFrame in the next code pass. Seat swap goes with it.
+- Pitch and roll limit sliders work.
+- Freelook: Alt+mouse composes and snaps back on release, as vanilla does. The pilots
+  quick-look buttons (continuous look left/right, also snap-back) "behave strangely" while
+  levelled: with the head yawed off the nose the pitch and roll corrections act on the
+  wrong axes for the direction being looked at. Pilot idea: pause levelling while a look
+  action is held. To be tried in the next code pass (a few lines), kept only if it flies well.

@@ -7,6 +7,10 @@
 // signed shortest angle in degrees
 #define WRAP(a) ((a) - 360 * floor (((a) + 180) / 360))
 
+// held look actions, which the engine adds on top of the head pose; the *Cont ones are the
+// head tracker's own axes, i.e. our pose read back, so they are left out
+#define LOOK_ACTIONS ["lookAround", "lookLeft", "lookRight", "lookLeftDown", "lookDown", "lookRightDown"]
+
 if (GVAR(toggleSlot) != "") then {
     if (inputAction GVAR(toggleSlot) > 0.5) then {
         if (!GVAR(slotHeld)) then {
@@ -20,7 +24,7 @@ if (GVAR(toggleSlot) != "") then {
 
 private _veh = objectParent player;
 private _level = GVAR(enabled) && GVAR(active) && {cameraView == "INTERNAL"} && {_veh isKindOf "Helicopter"}
-    && {driver _veh == player || {getNumber ([_veh, _veh unitTurret player] call CBA_fnc_getTurret >> "isCopilot") == 1}};
+    && {driver _veh == player} && {LOOK_ACTIONS findIf {inputAction _x > 0} == -1};
 
 if (!_level) exitWith {
     if (GVAR(levelling)) then {

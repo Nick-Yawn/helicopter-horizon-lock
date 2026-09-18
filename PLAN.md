@@ -78,9 +78,12 @@ and a 32-bit build doubles the BattlEye work. Documented as a requirement.
 
 ### Keeps
 
-1. **Levelling** in first person while the player is pilot or copilot of a helicopter.
-   Pitch and roll cancelled up to the limits, yaw untouched. The 1-frame prediction lead
-   stays as a fixed internal (no setting): 6 ms at 168 fps, but 25 ms at 40 fps.
+1. **Levelling** in first person while the player is the pilot of a helicopter (copilot
+   dropped 2026-09-18 after the first addon flight: not wanted).
+   Pitch and roll cancelled up to the limits, yaw untouched. Levelling pauses while a look
+   action is held, so looking around is vanilla and resumes on release. The 1-frame
+   prediction lead stays as a fixed internal (no setting): 6 ms at 168 fps, but 25 ms at
+   40 fps.
 2. **Zero pose whenever not levelling**: switched off, third person, not in a helicopter
    seat, next mission start. The head recentres and vanilla is exactly vanilla.
 3. **Toggle** between levelled and vanilla, two ways: a CBA keybind (keyboard, in
@@ -170,7 +173,7 @@ at the end, when nothing else wants to change.
 3. DLLs: `install`/`uninstall`, rename, rebuild. Flown with the addon, BattlEye off.
 4. Flight checks that gate the release:
    - Alt+mouse freelook composes on top of the pose; behaviour on Alt release (open since run 4).
-   - Toggle from keyboard and from a joystick button; state after seat swap, respawn,
+   - Toggle from keyboard and from a joystick button; state after respawn,
      mission restart, third person and back.
    - Hummingbird and Huron: default head angle, pitch offset slider.
    - Per-frame cost of `callExtension` (expected microseconds).
@@ -178,7 +181,9 @@ at the end, when nothing else wants to change.
 5. README for players, Workshop description, preview image, CHANGELOG.
 6. Workshop item, hidden: `hemtt publish`, subscribe on this PC, run from the Launcher
    with the Workshop copy (not the dev folder), registry pointing at the Workshop folder.
-7. DLL freeze: version 1.0.0, SHA-256 of both, tag `dll-1.0.0`, GitHub release with the
+7. DLL freeze: add `/Brepro` to the linker flags in build.cmd first (two builds of the same
+   source currently differ in the PE timestamp, so the hashes are not reproducible), then
+   version 1.0.0, SHA-256 of both, tag `dll-1.0.0`, GitHub release with the
    DLLs, submit both to BattlEye.
 8. Whitelist confirmed: BattlEye-on flight. Then public, GitHub release `v1.0.0` with the
    zip and the DLL hashes.
