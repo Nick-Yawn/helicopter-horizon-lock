@@ -1,14 +1,104 @@
-# arma3-horizoncam
+# Helicopter Horizon Lock
 
-An Arma 3 client-side mod that keeps the helicopter pilot's camera level with the
-horizon, with a configurable pitch/roll limit beyond which the airframe drags the
-camera along at a fixed offset. Goal: better attitude cues in a hover.
+Keeps the first-person pilot view level with the horizon in Arma 3 helicopters. The cockpit tilts around you while the horizon stays put, the way an action camera with horizon lock keeps its picture level while the body it is strapped to rolls. Cockpit, instruments, HUD symbology, flight controls and freelook are all vanilla; nothing else is changed.
 
-Status (2026-09-18): research complete, three in-game feasibility runs done. Every
-camera-replacement route is dead; the mod now drives the engine's own head pose by
-acting as a FreeTrack head tracker (two tiny DLLs in [native](native/README.md), no
-external program). The harness in [tests/feasibility](tests/feasibility/README.md)
-has a method for it (M5) awaiting its first run.
-Start with [PLAN.md](PLAN.md) for the current plan, then
-[docs/research/README.md](docs/research/README.md) for the research verdict and
-[tests/feasibility/RESULTS.md](tests/feasibility/RESULTS.md) for the in-game evidence. The mod itself will be a CBA_A3 addon built with HEMTT.
+## How it works
+
+Arma 3 has a built-in FreeTrack head-tracker input. This mod acts as that tracker. It ships two small DLLs: `hhl_x64.dll`, the extension the addon talks to, and `FreeTrackClient64.dll`, the tracker the engine loads at start-up. Every frame the addon reads the aircraft's pitch and roll and sends a head pose that cancels them, up to the limits you set, so the engine draws the view level. There is no external program, no shared memory and no network traffic.
+
+## Requirements
+
+- Arma 3, 64-bit (what the Launcher starts by default).
+- CBA_A3.
+- Windows.
+
+Not for use together with a real head or eye tracker (TrackIR, Tobii, opentrack). The engine has one head-tracking slot and this mod occupies it.
+
+## Install
+
+**Steam Workshop:** subscribe, then enable the mod in the Launcher together with CBA_A3.
+
+**Zip:** unpack the `@HelicopterHorizonLock` folder into your Arma 3 folder and add it as a local mod in the Launcher, together with CBA_A3.
+
+## First run
+
+The engine only loads a head tracker that is registered in the Windows registry, so the mod registers itself the first time it runs. In order:
+
+- Start any mission. The mod writes the registry value `HKCU\Software\Freetrack\FreetrackClient\Path`, pointing at the mod folder, and remembers that folder under `HKCU\Software\HelicopterHorizonLock` so it never overwrites another tracker's value. It then shows the hint **Helicopter Horizon Lock: head tracker registered. Restart Arma 3 once.**
+- Restart Arma 3.
+- Enable FreeTrack under Options > Controls > Controllers. If it is off, the mod shows the hint **enable FreeTrack under Options > Controls > Controllers** the first time you fly.
+- Take a helicopter pilot seat. The view levels itself.
+
+## BattlEye
+
+The two DLLs are not yet on BattlEye's whitelist, and BattlEye blocks any DLL it does not know. For now, launch without BattlEye: Launcher > Parameters > untick BattlEye. When BattlEye has blocked the mod, it tells you with the hint **BattlEye or a missing DLL blocked the extension. Launch Arma 3 without BattlEye.**
+
+This section will change once the whitelisting is through.
+
+## Using it
+
+The levelled view switches on when you get into a helicopter (setting **Start levelled when entering a helicopter**). Levelling itself only acts in the pilot seat, in first person.
+
+Toggle between the levelled and the vanilla view at any time:
+
+- **Keyboard:** Ctrl+Shift+H by default. Change it under Configure Addons (CBA) > Helicopter Horizon Lock > **Toggle levelled view**.
+- **Joystick button:** set the **Joystick toggle slot** setting to one of Arma's Use Action 1 to 20 custom controls, then bind that Use Action to your button under Configure > Controls > Custom.
+
+Looking around is vanilla. While a look action is held (Alt freelook, or the look left, right and down keys) levelling pauses and the head recentres; it resumes when you release.
+
+Third person, other seats, planes and everything outside a helicopter pilot seat are untouched. The head recentres whenever levelling stops.
+
+## Settings
+
+Options > Addon Options > Helicopter Horizon Lock. All settings are client-side.
+
+- **Enabled** (default on): master switch. Off means the vanilla view.
+- **Start levelled when entering a helicopter** (default on): switches the levelled view on whenever you take a helicopter seat.
+- **Pitch limit** (0 to 90 degrees, default 90): degrees of nose pitch cancelled before the view starts following the aircraft. 90 keeps the horizon level at any pitch.
+- **Roll limit** (0 to 45 degrees, default 45): degrees of bank cancelled before the view starts following the aircraft. The engine stops head roll at 45 degrees, so 45 keeps the horizon level at any bank it can.
+- **View pitch offset** (-20 to +20 degrees, default 0): degrees added to the levelled view, positive looks up. 0 keeps the aircraft's default head angle.
+- **Joystick toggle slot** (default None): the custom control, Use Action 1 to 20, that toggles the levelled view. Bind it to a joystick button under Configure > Controls > Custom.
+- **Register the head tracker automatically** (default on): writes the registry value that makes Arma 3 load the mod's head tracker. Never overwrites another tracker's value.
+
+## What to expect
+
+- Within the limits the horizon stays level. Past a limit the view follows the aircraft at that fixed angle.
+- The engine stops head roll at 45 degrees, which is why the roll limit ends there.
+- Yaw is never touched: the view keeps pointing where the nose points.
+- The engine's V-shaped freelook nose marker still moves with the aircraft.
+- The pose sent in one frame is drawn in the next. The mod predicts one frame ahead to cover this, and at normal frame rates it is invisible.
+- Helicopters only, pilot seat only, first person only.
+
+## Multiplayer
+
+The mod is client-side: nothing runs on the server, and the server does not need it. A server that verifies signatures needs the mod's key: copy `keys/hhl_1.0.0.bikey` (this version's key) from the mod folder into the server's `keys` folder. Each release is signed with a new key, so the key file changes with every version; that is how HEMTT signs.
+
+## Removing the mod
+
+Unsubscribe, or delete the mod folder. The registry value stays behind and is harmless: Arma simply finds no tracker. To clean it up anyway, either
+
+- before removing the mod, run `"hhl" callExtension "uninstall"` in the debug console (press Esc in a single-player mission, open the Debug Console from the pause menu, type the command in the EXECUTE box and press LOCAL EXEC), or
+- afterwards, run in a command prompt: `reg delete "HKCU\Software\Freetrack\FreetrackClient" /v Path /f` and then `reg delete "HKCU\Software\HelicopterHorizonLock" /f`.
+
+Then turn FreeTrack off again under Options > Controls > Controllers.
+
+## Troubleshooting
+
+The mod shows one hint per problem, once per game session:
+
+- **BattlEye or a missing DLL blocked the extension. Launch Arma 3 without BattlEye.** The extension did not load. Launch without BattlEye (see above) and check that both DLLs are in the mod folder.
+- **head tracker registered. Restart Arma 3 once.** The registry value was just written. Restart the game.
+- **another head-tracking client is registered at ...** Another tracker program owns the registry value. The mod leaves it alone and does nothing; remove that tracker's registration first if you want this mod instead.
+- **enable FreeTrack under Options > Controls > Controllers.** The engine is not polling the tracker. Enable FreeTrack there.
+
+If the view does not level and there is no hint, check that FreeTrack is enabled, BattlEye is off and CBA_A3 is loaded. Then run `"hhl" callExtension "status"` in the debug console:
+
+- `tracker=ok polls=N`: the tracker is loaded. Run it twice; N must rise between the two runs. If it does not, FreeTrack is off.
+- `tracker=notloaded`: the registry value is missing, or Arma 3 was not restarted after it was written.
+- `tracker=foreign`: another `FreeTrackClient64.dll` is loaded, from another tracker program.
+
+## Development
+
+Built with HEMTT (`hemtt dev`, `hemtt launch`, `hemtt release`). The addon is in `addons/main` (CBA, SQF). The DLL sources and their build are in `native/`, described in `native/README.md`. The feasibility harness and flight notes are in `tests/feasibility` and are not part of the mod; the research history is in `docs/research`.
+
+Licence: MIT.

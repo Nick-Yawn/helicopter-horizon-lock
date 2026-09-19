@@ -15,3 +15,10 @@ include = ["mod.cpp", "meta.cpp", "LICENSE", "README.md", "hhl_x64.dll", "FreeTr
 
 [hemtt.launch.default]
 workshop = ["450814997"] # CBA_A3
+
+[hemtt.release]
+folder = "HelicopterHorizonLock"
+
+[hemtt.publish]
+description = "README.md"
+changelog = "CHANGELOG.md"
