@@ -193,7 +193,8 @@ at the end, when nothing else wants to change.
    - Fresh profile: registry absent, head tracking off; the first-run hints in order.
 5. README for players (doubles as the Workshop description), CHANGELOG with the `[1.0.0]`
    entry, `[hemtt.release]` and `[hemtt.publish]` in project.toml. Done 2026-09-18
-   (dfc4e53 plus review fixes). Still to do: a cockpit screenshot for the Workshop preview.
+   (dfc4e53 plus review fixes). Preview: 1920x1080 centre crops of the pilot's 2026-09-19
+   screenshots (UH-80 banked over the Stratis coast), uploaded on the item page.
 6. Workshop item, hidden: `hemtt publish` with Steam running (creates the item, writes
    `meta.cpp`: commit it), accept the Workshop legal agreement on the item page, leave it
    hidden, set the long title and upload the preview there. Subscribe on this PC, run from
@@ -223,5 +224,5 @@ at the end, when nothing else wants to change.
 11. No coexistence with real head or eye trackers, now or later.
 12. Version 1.0.0 without a build number (see "What we are shipping").
 13. Signing keys as HEMTT does it: a fresh key per release, nothing to back up.
-14. Toggled freelook pauses levelling like a held look action (review finding, flight
-    check pending).
+14. Toggled freelook pauses levelling like a held look action (review finding; flown OK
+    2026-09-19).
