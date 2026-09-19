@@ -54,6 +54,13 @@ that `lib.exe` generates from `kernel32.def` and `advapi32.def`. Intermediates g
 `native/out/`, the DLLs to the repo root. Arma holds both DLLs while it runs, so close the
 game before rebuilding.
 
+The link step uses `/Brepro`, so a rebuild from the same source gives byte-identical DLLs:
+the PE timestamp is a hash of the content, not the link time. SHA-256 of the DLLs built
+from this source:
+
+    hhl_x64.dll            e8e283721f60b20ee811b86731f40230eaf40314cd7e4725511008faca32c60d
+    FreeTrackClient64.dll  5327ece84018b864f5c940d3e882371ba5eb618a4d06d377b9a739383e2b906c
+
 ## Registering the tracker by hand
 
 The addon does this itself on first run (setting "Register the head tracker
