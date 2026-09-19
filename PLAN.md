@@ -15,8 +15,10 @@ no washout, no smoothing, one button toggles between levelled and vanilla view.
 Name: **Helicopter Horizon Lock**. "Horizon lock" is the action-camera term for a picture
 that stays level while the body tilts, which is exactly this. Workshop title
 "Helicopter Horizon Lock - Level First-Person Pilot View". Prefix `hhl` throughout
-(folder `@HelicopterHorizonLock`, `hhl_main.pbo`, `hhl.bikey`, `hhl_x64.dll`,
-`"hhl" callExtension`), renamed from `hzc` before anything is built.
+(folder `@HelicopterHorizonLock`, `hhl_main.pbo`, `hhl_<version>.bikey`, `hhl_x64.dll`,
+`"hhl" callExtension`), renamed from `hzc` before anything is built. Version 1.0.0 with no
+build number: `hemtt publish` looks up the changelog entry equal to the exact project version
+and its parser accepts three-part versions only.
 
 ## Distribution: Steam Workshop first, GitHub alongside
 
@@ -33,9 +35,15 @@ Workshop description.
 Not worth it: Armaholic is gone, withSIX is gone, ModDB has no Arma audience left.
 
 Publishing tool: `hemtt publish` (creates or updates the Workshop item, uploads the release
-build, sets the description from a file, appends the changelog). Arma 3 Tools' Publisher is
-already installed as a fallback. First upload goes out hidden or friends-only for a test
-subscribe, then public.
+build, sets the description from README.md converted to Steam formatting, adds the
+changelog entry for the version). Arma 3 Tools' Publisher is already installed as a
+fallback. First upload goes out hidden for a test subscribe, then public. Facts checked in
+HEMTT 1.22's source: a new item stays hidden until the Workshop legal agreement is accepted
+on the item page; the title is set from project.toml `name` at creation only; no preview
+image is uploaded (done on the item page); the description must convert to under 8000
+characters, and inline code becomes a boxed block, so the README keeps commands on their
+own lines and uses no tables, links or images. `hemtt release` signs each release with a
+freshly generated key (`keys/hhl_<version>.bikey`), so there is no private key to keep.
 
 ### BattlEye
 
@@ -81,7 +89,8 @@ and a 32-bit build doubles the BattlEye work. Documented as a requirement.
 1. **Levelling** in first person while the player is the pilot of a helicopter (copilot
    dropped 2026-09-18 after the first addon flight: not wanted).
    Pitch and roll cancelled up to the limits, yaw untouched. Levelling pauses while a look
-   action is held, so looking around is vanilla and resumes on release. The 1-frame
+   action is held or freelook is toggled on (`freeLook`), so looking around is vanilla,
+   and resumes when it stops. The 1-frame
    prediction lead stays as a fixed internal (no setting): 6 ms at 168 fps, but 25 ms at
    40 fps.
 2. **Zero pose whenever not levelling**: switched off, third person, not in a helicopter
@@ -112,7 +121,7 @@ and a 32-bit build doubles the BattlEye work. Documented as a requirement.
    - polls not rising while in a helicopter: "enable FreeTrack under Options >
      Controls > Controllers".
 7. **Packaging**: `@HelicopterHorizonLock` = `addons/hhl_main.pbo` + `.bisign`,
-   `keys/hhl.bikey`, `hhl_x64.dll`, `FreeTrackClient64.dll`, `mod.cpp`, `meta.cpp`,
+   `keys/hhl_<version>.bikey`, `hhl_x64.dll`, `FreeTrackClient64.dll`, `mod.cpp`, `meta.cpp`,
    `LICENSE`, `README.md`. Built and signed by HEMTT, `requiredAddons[] = {"cba_main"}`,
    `hasInterface` guard, no server-side part. CBA_A3 listed as a required item on the
    Workshop page.
@@ -120,7 +129,7 @@ and a 32-bit build doubles the BattlEye work. Documented as a requirement.
    value and how to remove it, the head-tracking checkbox, the BattlEye status, "not for
    use alongside a real head or eye tracker (TrackIR, Tobii, opentrack): the engine has
    one head-tracking slot", multiplayer note (client-side; a server that verifies
-   signatures must accept `hhl.bikey`).
+   signatures must accept `hhl_<version>.bikey`).
 
 ### Cuts (never ship)
 
@@ -159,7 +168,7 @@ and a 32-bit build doubles the BattlEye work. Documented as a requirement.
 | `tests/feasibility/` | Keep (harness, KEYS.md, RESULTS.md); mark as not part of the mod |
 | `README.md` | Rewrite for players: what it does, install, first run, settings, limits, removal, troubleshooting; a short "Development" section at the end. Doubles as the Workshop description |
 | `PLAN.md` | This file; becomes `ROADMAP.md` or is deleted at 1.0 |
-| New files | `LICENSE` (MIT), `CHANGELOG.md`, `.hemtt/project.toml`, `mod.cpp`, `meta.cpp`, `addons/main/...` per `docs/research/03-tooling-and-structure.md`, `workshop/` (description, preview image) |
+| New files | `LICENSE` (MIT), `CHANGELOG.md`, `.hemtt/project.toml`, `mod.cpp`, `meta.cpp`, `addons/main/...` per `docs/research/03-tooling-and-structure.md`. No `workshop/` folder: the README is the description (`[hemtt.publish]`) and the preview image is uploaded on the item page |
 | Rename | `hzc` to `hhl` in sources, DLL name, harness console lines and docs; repo folder can stay `arma3-horizoncam` or become `helicopter-horizon-lock` |
 | Arma root | Delete the stray `hzc_x64.dll` from `B:\SteamLibrary\steamapps\common\Arma 3` once the addon ships its own |
 | Registry on this PC | Delete the current value (points at the repo's `bin/`) before the first addon run so `install` is exercised |
@@ -182,15 +191,21 @@ at the end, when nothing else wants to change.
    - Hummingbird and Huron: default head angle, pitch offset slider.
    - Per-frame cost of `callExtension` (expected microseconds).
    - Fresh profile: registry absent, head tracking off; the first-run hints in order.
-5. README for players, Workshop description, preview image, CHANGELOG.
-6. Workshop item, hidden: `hemtt publish`, subscribe on this PC, run from the Launcher
-   with the Workshop copy (not the dev folder), registry pointing at the Workshop folder.
-7. DLL freeze: add `/Brepro` to the linker flags in build.cmd first (two builds of the same
-   source currently differ in the PE timestamp, so the hashes are not reproducible), then
-   version 1.0.0, SHA-256 of both, tag `dll-1.0.0`, GitHub release with the
-   DLLs, submit both to BattlEye.
-8. Whitelist confirmed: BattlEye-on flight. Then public, GitHub release `v1.0.0` with the
-   zip and the DLL hashes.
+5. README for players (doubles as the Workshop description), CHANGELOG with the `[1.0.0]`
+   entry, `[hemtt.release]` and `[hemtt.publish]` in project.toml. Done 2026-09-18
+   (dfc4e53 plus review fixes). Still to do: a cockpit screenshot for the Workshop preview.
+6. Workshop item, hidden: `hemtt publish` with Steam running (creates the item, writes
+   `meta.cpp`: commit it), accept the Workshop legal agreement on the item page, leave it
+   hidden, set the long title and upload the preview there. Subscribe on this PC, run from
+   the Launcher with the Workshop copy (not the dev folder; `install` re-points the
+   registry), fly. This flight is also the first one on the `/Brepro` DLL bytes and on the
+   toggled-freelook pause.
+7. DLL freeze: `/Brepro` added and both DLLs rebuilt byte-reproducibly on 2026-09-18
+   (50b90f3; SHA-256 in native/README.md). After the step-6 flight: tag `dll-1.0.0`,
+   public GitHub repo (name to pick; `helicopter-horizon-lock` suggested), GitHub release
+   with the DLLs, submit both to BattlEye (draft text kept by the supervisor).
+8. Whitelist confirmed: BattlEye-on flight. Then public, date the CHANGELOG entry, GitHub
+   release `v1.0.0` with the zip and the DLL hashes, README BattlEye section updated.
 
 ## Decisions (2026-09-18)
 
@@ -206,3 +221,7 @@ at the end, when nothing else wants to change.
 9. No rush: finish and fly everything, submit the DLLs to BattlEye once at the end.
 10. Nose-marker hiding cut for v1 (did not work in flight).
 11. No coexistence with real head or eye trackers, now or later.
+12. Version 1.0.0 without a build number (see "What we are shipping").
+13. Signing keys as HEMTT does it: a fresh key per release, nothing to back up.
+14. Toggled freelook pauses levelling like a held look action (review finding, flight
+    check pending).
