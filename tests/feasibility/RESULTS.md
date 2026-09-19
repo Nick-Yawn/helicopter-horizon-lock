@@ -169,3 +169,17 @@ Launched with `hemtt launch -Q -- -name=Nick_Yawn -showScriptErrors` (CBA_A3 fro
 - Pilot: directional levelling (correction rotated into the look direction) would be ideal;
   later, not v1.
 - Fresh start with the controller off: the poll hint fired within 3 s of the first levelled frame. The entry to enable is labelled FreeTrack under Options > Controls > Controllers; hint and docs reworded.
+
+## Run 6 (2026-09-19): rebuilt DLLs, toggled freelook, Workshop copy
+
+- `hemtt launch` on the `/Brepro` DLLs: identical feel. Freelook toggled on (not held) now
+  pauses levelling and it resumes when toggled off, as the review asked.
+- Hidden Workshop item 3804696255, subscribed, run from the Launcher with BattlEye off on
+  the autorotation practice scenarios. First start: no levelling (tracker not registered);
+  the "restart once" hint was drowned by the scenario's own hints. Second start: levelled
+  straight away. The running game had both DLLs loaded from
+  `B:\...\Arma 3\!Workshop\@Helicopter Horizon Lock`, and the registry (checked from the
+  pilot's own terminal) points there: `install` registers the Launcher's junction path, not
+  the workshop content folder.
+- CBA warns about a stale roll limit of 84.8 in the pilot's profile (set before the slider
+  was capped at 45) and falls back to 45. Profile residue, not a mod issue.

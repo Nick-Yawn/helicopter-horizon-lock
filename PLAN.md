@@ -200,7 +200,11 @@ at the end, when nothing else wants to change.
    hidden, set the long title and upload the preview there. Subscribe on this PC, run from
    the Launcher with the Workshop copy (not the dev folder; `install` re-points the
    registry), fly. This flight is also the first one on the `/Brepro` DLL bytes and on the
-   toggled-freelook pause.
+   toggled-freelook pause. Done 2026-09-19: item 3804696255 (hidden), first start
+   registered `B:\...\Arma 3\!Workshop\@Helicopter Horizon Lock` (the Launcher's junction,
+   not the workshop content folder), second start levelled; the running game had both DLLs
+   loaded from that folder. The "restart once" hint was swallowed by the practice
+   scenario's own hints.
 7. DLL freeze: `/Brepro` added and both DLLs rebuilt byte-reproducibly on 2026-09-18
    (50b90f3; SHA-256 in native/README.md). After the step-6 flight: tag `dll-1.0.0`,
    public GitHub repo (name to pick; `helicopter-horizon-lock` suggested), GitHub release
