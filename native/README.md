@@ -51,12 +51,18 @@ reads `Path` at start-up, so both need a restart to take effect.
 is installed, so the sources include no headers, link no C runtime (`/NODEFAULTLIB`,
 entry point `DllMain`), and the kernel32 and advapi32 imports come from import libraries
 that `lib.exe` generates from `kernel32.def` and `advapi32.def`. Intermediates go to
-`native/out/`, the DLLs to the repo root. Arma holds both DLLs while it runs, so close the
-game before rebuilding.
+`native/out/`, the DLLs to the repo root. With the HEMTT dev layout Arma runs copies of
+the DLLs under `.hemttout\dev`, so the build works with the game open; the copies refresh
+on the next `hemtt dev` or `hemtt launch`, which needs the game closed.
 
-The link step uses `/Brepro`, so a rebuild from the same source gives byte-identical DLLs:
-the PE timestamp is a hash of the content, not the link time. SHA-256 of the DLLs built
-from this source:
+Run it from a Command Prompt or PowerShell by full path (from Git Bash the path gets
+mangled and nothing builds):
+
+    cmd /c C:\Users\Nicho\projects\arma3-horizoncam\native\build.cmd
+
+The link step uses `/Brepro`, so a rebuild from the same source with the same toolset
+(MSVC 14.29) gives byte-identical DLLs: the PE timestamp is a hash of the content, not the
+link time. SHA-256 of the DLLs built from this source:
 
     hhl_x64.dll            e8e283721f60b20ee811b86731f40230eaf40314cd7e4725511008faca32c60d
     FreeTrackClient64.dll  5327ece84018b864f5c940d3e882371ba5eb618a4d06d377b9a739383e2b906c
@@ -106,9 +112,12 @@ Tobii share that one entry). `ownSettings=1` means the engine applies no curves 
 - The vehicle's default head angle stays in: the rendered view sits about 6 degrees
   nose-down on the Huron with zero sent.
 
-## Still open
+## Settled since
 
-- Latency: the pose computed in frame N is polled at the start of frame N+1.
-- Does mouse freelook still compose on top, and what happens on Alt release?
-- Does the head-angle clamp in `ViewPilot` limit the tracker pose (irrelevant at 5 degrees)?
-- Yaw gain is unmeasured (never sent).
+- Latency is one frame: the pose computed in frame N is polled at the start of frame N+1.
+  The addon predicts one frame ahead to cover it.
+- Mouse freelook composes on top of the pose and snaps back on Alt release, which is
+  vanilla.
+- The engine clamps tracker roll at 45 degrees in the pilot seat, which is why the roll
+  limit setting ends at 45.
+- Yaw gain is still unmeasured because yaw is never sent.

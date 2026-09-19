@@ -24,7 +24,7 @@ if (GVAR(toggleSlot) != "") then {
 
 private _veh = objectParent player;
 private _level = GVAR(enabled) && GVAR(active) && {cameraView == "INTERNAL"} && {_veh isKindOf "Helicopter"}
-    && {driver _veh == player} && {LOOK_ACTIONS findIf {inputAction _x > 0} == -1};
+    && {driver _veh == player} && {!freeLook} && {LOOK_ACTIONS findIf {inputAction _x > 0} == -1};
 
 if (!_level) exitWith {
     if (GVAR(levelling)) then {
