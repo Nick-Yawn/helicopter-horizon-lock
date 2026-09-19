@@ -84,8 +84,8 @@ be submitted to BattlEye for whitelisting, as Intercept, ACE, TFAR and ACRE do.
 
 The engine loads the DLL regardless but only polls it when the head-tracking controller
 is enabled: `class trackIRClass { enabled=1; }` in the `.Arma3Profile`, set in-game under
-Configure, Controls, Controllers (FreeTrack, TrackIR and Tobii share that one entry).
-`ownSettings=1` means the engine applies no curves of its own.
+Options > Controls > Controllers, where the entry is labelled "FreeTrack" (TrackIR and
+Tobii share that one entry). `ownSettings=1` means the engine applies no curves of its own.
 
 ## Measured on 2026-09-18 (run 4, Huron, Arma 3 2.22)
 

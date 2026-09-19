@@ -168,3 +168,4 @@ Launched with `hemtt launch -Q -- -name=Nick_Yawn -showScriptErrors` (CBA_A3 fro
   resume on release. Pilot: "good enough for now"; the jump on engaging is acceptable.
 - Pilot: directional levelling (correction rotated into the look direction) would be ideal;
   later, not v1.
+- Fresh start with the controller off: the poll hint fired within 3 s of the first levelled frame. The entry to enable is labelled FreeTrack under Options > Controls > Controllers; hint and docs reworded.

@@ -40,7 +40,7 @@ if (uiNamespace getVariable [QGVAR(checkPolls), false]) then {
     // "status" carries the engine's poll count; it must rise while the view is levelled
     [{
         if (("hhl" callExtension "status") isEqualTo _this) then {
-            hint "Helicopter Horizon Lock: enable Head tracking under Configure > Controls > Controllers.";
+            hint "Helicopter Horizon Lock: enable FreeTrack under Options > Controls > Controllers.";
         };
     }, "hhl" callExtension "status", 3] call CBA_fnc_waitAndExecute;
 };

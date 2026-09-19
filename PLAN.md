@@ -109,7 +109,7 @@ and a 32-bit build doubles the BattlEye work. Documented as a requirement.
    - `status` = `notloaded` and the registry value is absent: `install`, then "restart
      Arma once";
    - `status` = `foreign`: name the other tracker's path, do nothing;
-   - polls not rising while in a helicopter: "enable Head tracking under Configure >
+   - polls not rising while in a helicopter: "enable FreeTrack under Options >
      Controls > Controllers".
 7. **Packaging**: `@HelicopterHorizonLock` = `addons/hhl_main.pbo` + `.bisign`,
    `keys/hhl.bikey`, `hhl_x64.dll`, `FreeTrackClient64.dll`, `mod.cpp`, `meta.cpp`,
