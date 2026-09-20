@@ -209,8 +209,9 @@ at the end, when nothing else wants to change.
    (50b90f3; SHA-256 in native/README.md). Done 2026-09-19 after the step-6 flight: tag
    `dll-1.0.0`, public repo https://github.com/Nick-Yawn/helicopter-horizon-lock, pre-release
    `dll-1.0.0` with both DLLs (hashes verified after download) and the zip, README carries
-   the link and a motion sickness note, Workshop description updated. Left: the pilot pastes
-   the BattlEye request (topic "Other requests", subject "Arma extension whitelisting").
+   the link and a motion sickness note, Workshop description updated. BattlEye request sent
+   by the pilot on 2026-09-19 (contact form, topic "Other requests", subject "Arma
+   extension whitelisting", linking release dll-1.0.0). Waiting for their reply.
 8. Public on 2026-09-19 at the pilot's call, before the whitelist: the README says to run
    without BattlEye, so players are informed. CHANGELOG dated, tag `v1.0.0`, GitHub release
    with the zip. When the whitelist is confirmed: BattlEye-on flight, README BattlEye
