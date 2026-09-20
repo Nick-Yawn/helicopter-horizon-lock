@@ -2,6 +2,8 @@
 
 Keeps the first-person pilot view level with the horizon in Arma 3 helicopters. The cockpit tilts around you while the horizon stays put. Cockpit, instruments, HUD symbology, flight controls and freelook are all vanilla; nothing else is changed.
 
+**Motion sickness:** a view that stays level while the cockpit rolls around you is not the cue you are used to, and some people feel queasy at first. Start with short sessions and toggle the levelled view off (Ctrl+Shift+H by default) the moment you feel unwell. Lowering the pitch and roll limits does not help: a view that follows the aircraft only past the limit was worse in testing, so the defaults are the full range.
+
 ## How it works
 
 Arma 3 has a built-in FreeTrack head-tracker input. This mod acts as that tracker. It ships two small DLLs: hhl_x64.dll, the extension the addon talks to, and FreeTrackClient64.dll, the tracker the engine loads at start-up. Every frame the addon reads the aircraft's pitch and roll and sends a head pose that cancels them, up to the limits you set, so the engine draws the view level.
@@ -26,7 +28,7 @@ The engine only loads a head tracker that is registered in the Windows registry,
 
 - Start any mission. The mod writes the registry value HKCU\Software\Freetrack\FreetrackClient\Path, pointing at the mod folder, and remembers that folder under HKCU\Software\HelicopterHorizonLock so it never overwrites another tracker's value. It then shows the hint **Helicopter Horizon Lock: head tracker registered. Restart Arma 3 once.**
 - Restart Arma 3.
-- Enable FreeTrack under Options > Controls > Controllers. If it is off, the mod shows the hint **enable FreeTrack under Options > Controls > Controllers** the first time you fly.
+- Enable FreeTrack under Options > Controls > Controllers. If it is off, the mod reminds you the first time you fly.
 - Take a helicopter pilot seat. The view levels itself.
 
 ## BattlEye
@@ -60,7 +62,7 @@ Options > Addon Options > Helicopter Horizon Lock. All settings are client-side.
 
 ## Multiplayer
 
-The mod is client-side: nothing runs on the server, and the server does not need it. A server that verifies signatures needs the mod's key: copy keys/hhl_1.0.0.bikey (this version's key) from the mod folder into the server's keys folder. Each release is signed with a new key, so the key file changes with every version.
+The mod is client-side: nothing runs on the server, and the server does not need it. A server that verifies signatures needs the mod's key: copy keys/hhl_1.0.0.bikey from the mod folder into the server's keys folder. Each release is signed with a new key, so the key file changes with every version.
 
 ## Removing the mod
 
@@ -97,12 +99,12 @@ If the view does not level and there is no hint, check that FreeTrack is enabled
 "hhl" callExtension "status"
 ```
 
-- **tracker=ok polls=N**: the tracker is loaded. Run it twice; N must rise between the two runs. If it does not, FreeTrack is off.
+- **tracker=ok polls=N**: the tracker is loaded. Run it twice; if N does not rise, FreeTrack is off.
 - **tracker=notloaded**: the registry value is missing, or Arma 3 was not restarted after it was written.
 - **tracker=foreign**: another FreeTrackClient64.dll is loaded, from another tracker program.
 
 ## Development
 
-Built with HEMTT; the addon is in addons/main and the DLL sources and their build are in native/, described in native/README.md.
+Built with HEMTT; the addon is in addons/main and the DLL sources and their build are in native/, described in native/README.md. Source, issues and the DLL sources are at https://github.com/Nick-Yawn/helicopter-horizon-lock.
 
 Licence: MIT.
