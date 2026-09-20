@@ -211,8 +211,10 @@ at the end, when nothing else wants to change.
    `dll-1.0.0` with both DLLs (hashes verified after download) and the zip, README carries
    the link and a motion sickness note, Workshop description updated. Left: the pilot pastes
    the BattlEye request (topic "Other requests", subject "Arma extension whitelisting").
-8. Whitelist confirmed: BattlEye-on flight. Then public, date the CHANGELOG entry, GitHub
-   release `v1.0.0` with the zip and the DLL hashes, README BattlEye section updated.
+8. Public on 2026-09-19 at the pilot's call, before the whitelist: the README says to run
+   without BattlEye, so players are informed. CHANGELOG dated, tag `v1.0.0`, GitHub release
+   with the zip. When the whitelist is confirmed: BattlEye-on flight, README BattlEye
+   section rewritten, re-publish.
 
 ## Decisions (2026-09-18)
 
@@ -232,3 +234,5 @@ at the end, when nothing else wants to change.
 13. Signing keys as HEMTT does it: a fresh key per release, nothing to back up.
 14. Toggled freelook pauses levelling like a held look action (review finding; flown OK
     2026-09-19).
+15. Workshop item public before BattlEye whitelisting (pilot's decision, 2026-09-19):
+    the README states the BattlEye situation and players run without it, as the pilot does.

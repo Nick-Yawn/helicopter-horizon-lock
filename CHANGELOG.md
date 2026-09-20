@@ -2,7 +2,7 @@
 
 All notable changes to Helicopter Horizon Lock are recorded here. The format follows Keep a Changelog and the version numbers follow Semantic Versioning.
 
-## [1.0.0]
+## [1.0.0] - 2026-09-19
 
 ### Added
 
