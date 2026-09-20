@@ -206,9 +206,11 @@ at the end, when nothing else wants to change.
    loaded from that folder. The "restart once" hint was swallowed by the practice
    scenario's own hints.
 7. DLL freeze: `/Brepro` added and both DLLs rebuilt byte-reproducibly on 2026-09-18
-   (50b90f3; SHA-256 in native/README.md). After the step-6 flight: tag `dll-1.0.0`,
-   public GitHub repo (name to pick; `helicopter-horizon-lock` suggested), GitHub release
-   with the DLLs, submit both to BattlEye (draft text kept by the supervisor).
+   (50b90f3; SHA-256 in native/README.md). Done 2026-09-19 after the step-6 flight: tag
+   `dll-1.0.0`, public repo https://github.com/Nick-Yawn/helicopter-horizon-lock, pre-release
+   `dll-1.0.0` with both DLLs (hashes verified after download) and the zip, README carries
+   the link and a motion sickness note, Workshop description updated. Left: the pilot pastes
+   the BattlEye request (topic "Other requests", subject "Arma extension whitelisting").
 8. Whitelist confirmed: BattlEye-on flight. Then public, date the CHANGELOG entry, GitHub
    release `v1.0.0` with the zip and the DLL hashes, README BattlEye section updated.
 
